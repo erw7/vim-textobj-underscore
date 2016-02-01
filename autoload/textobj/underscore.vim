@@ -8,15 +8,7 @@ function! s:search_underscore(object_type)
     let end_pos = copy(current_pos)
     let end_pos[1:2] = searchpos('_', 'n', current_pos[1])
     if end_pos[1:2] == [0, 0]
-      if current_pos == start_pos
-        let end_pos = copy(start_pos)
-        let start_pos[1:2] = searchpos('_', 'bn', current_pos[1])
-        if start_pos == [0, 0]
-          return 0
-        endif
-      else
-        return 0
-      endif
+      let end_pos[1:2] = searchpos('\>', 'n', current_pos[1])
     endif
   endif
 
