@@ -12,13 +12,22 @@ call textobj#user#plugin('underscore', {
 
 function! s:search_underscore()
   let current_pos = getpos('.')
-  let start_pos = searchpos('_', 'bn', current_pos[1])
+  let start_pos = searchpos('_', 'bcn', current_pos[1])
   if start_pos == [0, 0]
     throw 'not_found'
-  endif
-  let end_pos = searchpos('_', 'n', current_pos[1])
-  if end_pos == [0, 0]
-    throw 'not_found'
+  else
+    let end_pos = searchpos('_', 'n', current_pos[1])
+    if end_pos == [0, 0]
+      if current_pos[1:2] == start_pos
+        let end_pos = start_pos
+        let start_pos = searchpos('_', 'bn', current_pos[1])
+        if start_pos == [0, 0]
+          throw 'not_found'
+        endif
+      else
+        throw 'not_found'
+      endif
+    endif
   endif
 
   return [ start_pos[1], end_pos[1] ]
