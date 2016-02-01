@@ -3,12 +3,10 @@ if exists('g:loaded_textobj_underscore')
 endif
 
 call textobj#user#plugin('underscore', {
-\      '-': {
-\        '*sfile*': expand('<sfile>:p'),
-\        'select-a': 'a_',  '*select-a-function*': 's:select_a',
-\        'select-i': 'i_',  '*select-i-function*': 's:select_i'
-\      }
-\    })
+      \      'a': { 'sfile': expand('<sfile>'), 'select': 'a_', 'select-function': 's:select_a' },
+      \      'A': { 'sfile': expand('<sfile>'), 'select': 'a-', 'select-function': 's:select_A' },
+      \      'i': { 'sfile': expand('<sfile>'), 'select': 'i_', 'select-function': 's:select_i' },
+      \    })
 
 function! s:search_underscore()
   let current_pos = getpos('.')
@@ -35,7 +33,7 @@ endfunction
 
 function! s:select_a()
   try
-     let [ start_col, end_col ] = s:search_underscore()
+    let [ start_col, end_col ] = s:search_underscore()
   catch
     return 0
   endtry
@@ -49,11 +47,27 @@ function! s:select_a()
   return [ 'v', start_pos, end_pos ]
 endfunction
 
+function! s:select_A()
+  try
+    let [ start_col, end_col ] = s:search_underscore()
+  catch
+    return 0
+  endtry
+
+  let start_pos = getpos('.')
+  let start_pos[2] = start_col + 1
+
+  let end_pos = getpos('.')
+  let end_pos[2] = end_col
+
+  return [ 'v', start_pos, end_pos ]
+endfunction
+
 " ciao_come_stai
 
 function! s:select_i()
   try
-  let [ start_col, end_col ] = s:search_underscore()
+    let [ start_col, end_col ] = s:search_underscore()
   catch
     return 0
   endtry
